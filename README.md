@@ -1,16 +1,23 @@
-# AURAVE — версия 3.4
+# AURAVE v3.5 — Supabase-connected build
 
-Статический сайт игровой студии AURAVE.
+## What's connected
+- Supabase anonymous sign-in (no email/password form; the browser keeps the anonymous session).
+- Shared profiles (nickname + avatar URL) in `public.profiles`.
+- Shared reviews and replies in `public.reviews` and `public.review_replies`.
+- Review attachments uploaded to the public `aurave-community` Storage bucket.
+- Existing server-side daily review trigger remains responsible for the 3/day limit.
 
-## Что обновлено
-- Удалены повторяющиеся аватарки из списка выбора.
-- В первом экране увеличен логотип-кот; теперь он расположен в крупной круглой области с фиолетовым свечением.
-- Добавлен дневной лимит: не более 3 отзывов в день на одном браузере.
-- Усилен текстовый фильтр отзывов: мат, оскорбления, угрозы, сексуальный и наркотический контент, ссылки и спам.
-- Отзывы, профиль и лимит сохраняются в `localStorage`.
+## Before publishing
+1. In Supabase, confirm **Authentication → Sign In / Providers → Allow anonymous sign-ins** is enabled and saved.
+2. The main `SUPABASE_SETUP.sql` migration from the preparation package must already have run successfully.
+3. Run `SUPABASE_IMAGES_MIGRATION.sql` once in Supabase SQL Editor. It adds `reviews.images` for the uploaded image URLs.
+4. Publish the contents of this folder to the root of the existing GitHub Pages repository (keep the `assets/` folder beside `index.html`).
 
-## Запуск
-Открой `index.html` в браузере или размести всю папку на статическом хостинге.
+The browser bundle contains only the Supabase Project URL and Publishable key. Never put an `sb_secret_...` key in this site.
 
-## Важно
-Это фронтенд-версия без сервера. Лимит и фильтрация работают в браузере и могут быть обойдены очисткой данных или изменением локального хранилища. Для общей публикации отзывов, строгого лимита на аккаунт/IP, проверки изображений и модерации на всех устройствах потребуется backend и серверная база данных.
+## Important limitations / security notes
+- Anonymous sessions are device/browser-bound. Clearing site data or changing devices can lose access to that anonymous identity.
+- Nickname availability is checked by the client for convenience; the database's case-insensitive unique index is the final duplicate guard. A race may still produce a database error shown to the user.
+- The reserved owner nickname and verified badge are deliberately not granted based on the visible nickname alone. Bind the owner's Supabase auth UUID to a protected server-side owner record before enabling the badge.
+- The text moderation filter is client-side convenience, not a security boundary.
+- The cart remains local to the browser; checkout is not implemented.

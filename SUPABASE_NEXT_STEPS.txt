@@ -1,0 +1,14 @@
+AURAVE v3.5 — Supabase connection preparation
+
+This package preserves the original v3.5 site and adds:
+- SUPABASE_SETUP.sql: non-destructive database/storage migration for shared community data.
+- supabase-config.js: your public Project URL and Publishable key.
+
+IMPORTANT: The original site's profile/review JavaScript has not yet been switched to Supabase in this preparation package. Do not upload this ZIP to GitHub expecting shared reviews to work yet.
+
+Next step:
+1. Open Supabase > SQL Editor.
+2. Create a new query, paste SUPABASE_SETUP.sql, and run it once.
+3. Send a screenshot of the result. Then the frontend migration can be applied against the confirmed schema.
+
+Never expose an sb_secret_ key or service_role key.
